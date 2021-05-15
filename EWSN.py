@@ -1,3 +1,5 @@
+import cv2
+
 def mode_ewsn(binary):
     ewsn = 129
 
