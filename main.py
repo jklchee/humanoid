@@ -1,4 +1,4 @@
-import cv2
+
 import numpy as np
 import timeit
 
@@ -7,6 +7,7 @@ from LINE import *
 from ARROW import *
 from ABCD import *
 from MISSION import *
+from dialogControlBox import *
 
 serial_use = 1
 
@@ -47,8 +48,8 @@ while True:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)  # BGR을 HSV모드로 전환
 
     if ret:  # 사진 가져오는것을 성공할 경우
-        cv2.imshow('Original', frame)
-
+        #cv2.imshow('Original', frame)
+        win.mainloop()
     else:
         print('cannot load camera!')
         break

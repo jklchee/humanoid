@@ -1,3 +1,4 @@
+import cv2
 def mode_linetracer(binary_line):
     line = 129
 

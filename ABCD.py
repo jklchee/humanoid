@@ -1,3 +1,4 @@
+import cv2
 def mode_abcd(binary_mask):
     abcd = 129
 

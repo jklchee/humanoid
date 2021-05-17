@@ -1,3 +1,4 @@
+import cv2
 def mode_arrow(binary):
     arrow = 129
 
