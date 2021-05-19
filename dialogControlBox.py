@@ -4,7 +4,6 @@ from tkinter import*
 from PIL import Image, ImageTk
 
 win = Tk()
-win2 = Tk()
 win.geometry("670x600+200+30")
 win.resizable(False, False)
 w = 300
