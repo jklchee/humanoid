@@ -13,21 +13,25 @@ time.sleep(0.1)
 camera = cv2.VideoCapture(0) #카메라 생성
 
 if not camera.isOpened(): #카메라 생성 확인
-    print ('Can\'t open the CAM(%d)' % (0))
+    print ('Can\'t open the CAM(0)')
     exit()
 
 
-for frame in camera.read(frame, format="bgr", use_video_port=True):
-    image = frame.array
-    Blackline = cv2.inRange(image, (0, 0, 0), (60, 60, 60))
+#for frame in camera.capture_continuous(frame, format="bgr", use_video_port=True):
+while True:
+    #ret, image = camera.read()
+    image = cv2.imread("/Users/leejinwoo/Desktop/0002.jpg", cv2.IMREAD_ANYCOLOR)
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    YellowLine = cv2.inRange(hsv, (20, 100, 100), (30, 255, 255))
     kernel = np.ones((3, 3), np.uint8)
-    Blackline = cv2.erode(Blackline, kernel, iterations=5)
-    Blackline = cv2.dilate(Blackline, kernel, iterations=9)
-    img_blk, contours_blk, hierarchy_blk = cv2.findContours(Blackline.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    YellowLine = cv2.erode(YellowLine, kernel, iterations=5)
+    YellowLine = cv2.dilate(YellowLine, kernel, iterations=9)
+    contours_blk, hierarchy_blk = cv2.findContours(YellowLine.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     if len(contours_blk) > 0:
-        blackbox = cv2.minAreaRect(contours_blk[0])
-        (x_min, y_min), (w_min, h_min), ang = blackbox
+        yellowbox = cv2.minAreaRect(contours_blk[0])
+        (x_min, y_min), (w_min, h_min), ang = yellowbox
         if ang < -45:
             ang = 90 + ang
         if w_min < h_min and ang > 0:
@@ -37,7 +41,7 @@ for frame in camera.read(frame, format="bgr", use_video_port=True):
         setpoint = 320
         error = int(x_min - setpoint)
         ang = int(ang)
-        box = cv2.boxPoints(blackbox)
+        box = cv2.boxPoints(yellowbox)
         box = np.int0(box)
         cv2.drawContours(image, [box], 0, (0, 0, 255), 3)
         cv2.putText(image, str(ang), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -45,8 +49,7 @@ for frame in camera.read(frame, format="bgr", use_video_port=True):
         cv2.line(image, (int(x_min), 200), (int(x_min), 250), (255, 0, 0), 3)
 
     cv2.imshow("orginal with line", image)
-    rawCapture.truncate(0)
+
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
-
